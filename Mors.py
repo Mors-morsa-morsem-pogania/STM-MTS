@@ -38,3 +38,31 @@ def TTM(plikztekstem="TTM.txt",slownik=alfabetmorsa):
     plik.close()
 
 TTM("TTM.txt",alfabetmorsa)
+
+def MTT(plikzmorsem="TTM.txt",slownik=alfabetmorsa):
+    """
+    Mors to Text
+    :param plikztekstem: string albo plik txt/csv
+    :return: plik z tłumaczeniem na tekst
+    """
+    plik=open(plikzmorsem,'r+')
+    tekst=plik.readline()
+    print(tekst)
+    tekst = tekst.replace(".", '1')
+    tekst = tekst.replace("_ ", '0')
+    tekst=tekst.split("|")
+    print(tekst)
+    slowo=""
+    for dl in range(0,len(tekst)):
+        # print(tekst[dl])
+        for key in slownik.keys():
+            if slownik[key]==tekst[dl]:
+                slowo=slowo+str(key)
+                
+    print(slowo)
+    # slowo=slowo.replace("1",'.')
+    # slowo=slowo.replace("0",'_ ')
+    # print(slowo)
+    plik.close()
+
+MTT("MTT.txt",alfabetmorsa)
