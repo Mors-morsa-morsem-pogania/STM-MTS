@@ -14,3 +14,27 @@ def load_results(filename):
     return results_dict
 alfabetmorsa=load_results(filename="alfabetmorsa.csv")
 print(alfabetmorsa)
+
+def TTM(plikztekstem="TTM.txt",slownik=alfabetmorsa):
+    """
+    Text to Mors
+    :param plikzmorsem: string albo plik txt/csv
+    :return: plik z tłumaczeniem na tekst
+    """
+    plik=open(plikztekstem,'r+')
+    mors=plik.readline()
+    slowo=""
+    if str(mors).isalnum()==True:
+        print(mors)
+        for i in range(0,len(mors)):
+            slowo=slowo+str(slownik[mors[i]])+str("|")
+        print(slowo)
+        slowo=slowo.replace("1",'.')
+        slowo=slowo.replace("0",'_ ')
+        print(slowo)
+    else:
+        slowo="ERROR"
+        print(slowo)
+    plik.close()
+
+TTM("TTM.txt",alfabetmorsa)
