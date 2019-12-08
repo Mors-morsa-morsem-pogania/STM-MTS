@@ -1,9 +1,10 @@
-# import STM
+from STM import get_word, translate_to_morse
 # import MTS
 
 def call_STM():
 
-    print("Tu będzie STM")
+    word = get_word()
+    translate_to_morse(word)
 
 
 def call_MTS():
