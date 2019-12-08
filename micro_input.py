@@ -1,54 +1,86 @@
-"""
-zbiera przez 5 sekund z mikrofonu
-
-UWAGI:
-na razie u mnie działa tylko z mikro wewnętrznym laptopa //Paula
-
-"""
-
 import pyaudio
-import time
-import numpy as np
-from matplotlib import pyplot as plt
-import scipy.signal as signal
+import wave
+from pynput import keyboard
+import threading
 
 
-
+CHUNK = 8192
+FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
+WAVE_OUTPUT_FILENAME = "waves/output.wav"
 
-p = pyaudio.PyAudio()
-fulldata = np.array([])
-dry_data = np.array([])
+def record_sound_on_key():
 
-def main():
-    stream = p.open(format=pyaudio.paFloat32,
+    p = pyaudio.PyAudio()
+
+    stream = p.open(format=FORMAT,
                     channels=CHANNELS,
                     rate=RATE,
-                    output=True,
                     input=True,
-                    stream_callback=callback
-                    )
+                    frames_per_buffer=CHUNK)
+    frames = []
 
-    stream.start_stream()
+    recordingEvent = threading.Event()    # set to activate recording
+    exitEvent = threading.Event()         # set to stop recording thread
 
-    while stream.is_active():
-        time.sleep(5)
-        stream.stop_stream()
+
+    def on_press(key):
+        if key == keyboard.Key.ctrl_l:
+            print('- Recording -'.format(key))
+            recordingEvent.set()
+        else:
+            print('incorrect character {0}, press ctrl_l'.format(key))
+
+
+    def on_release(key):
+        print('{0} released'.format(key))
+        if key == keyboard.Key.ctrl_l:
+            print('{0} stop'.format(key))
+            recordingEvent.clear()
+            listener.stop()
+            return False
+
+
+    def do_recording():
+        while (not exitEvent.is_set()):
+            if (recordingEvent.wait(0.1)):
+                try:
+                    data = stream.read(CHUNK)
+                    # print len(data)
+                    frames.append(data)
+                except IOError:
+                    print('warning: dropped frame') # can replace with 'pass' if no message desired
+
+
+    class myRecorder(threading.Thread):
+        def __init__(self):
+            threading.Thread.__init__(self)
+        def run(self):
+            do_recording()
+
+
+    # start recorder thread
+    recordingThread = myRecorder()
+    recordingThread.start()
+
+    # monitor keyboard
+    with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
+        listener.join()
+
+    # stop recorder thread
+    exitEvent.set()
+    recordingThread.join()
+
+    print("* done recording")
+
+    stream.stop_stream()
     stream.close()
-
-    numpydata = np.hstack(fulldata)
-    plt.plot(numpydata)
-    plt.show()
-
-
     p.terminate()
 
-def callback(in_data, frame_count, time_info, flag):
-    global b,a,fulldata,dry_data,frames
-    audio_data = np.fromstring(in_data, dtype=np.float32)
-
-    fulldata = np.append(fulldata,audio_data)
-    return (audio_data, pyaudio.paContinue)
-
-main()
+    wf = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+    wf.setnchannels(CHANNELS)
+    wf.setsampwidth(p.get_sample_size(FORMAT))
+    wf.setframerate(RATE)
+    wf.writeframes(b''.join(frames))
+    wf.close()
