@@ -103,7 +103,7 @@ def Audio_to_text(audio, prob=200):
 
 
 # slowa=Audio_to_text(s,200)
-slowa=Audio_to_text(s,200)
+slowa=Audio_to_text(s,20)
 print(slowa)
 
 def MTT(slowa, alfabet):
