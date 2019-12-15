@@ -7,7 +7,7 @@ from Mors import alfabetmorsa
 import pyaudio
 
 SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
-filename = "Morseshort.wav"
+filename = "val2.wav"
 
 # wave z alfabetem
 for i in alfabetmorsa.keys():
@@ -152,7 +152,8 @@ def Morse_to_Audio(slowa, playsound=None):
     # chunk = 1024
     data_kropka = kropka.readframes(-1)
     data_kreska = kreska.readframes(-1)
-
+    data_kropka = np.fromstring(data_kropka, 'Int16')
+    data_kreska = np.fromstring(data_kreska, 'Int16')
     # play.write(data)
     # play.stop_stream()
     # play stream
@@ -165,9 +166,9 @@ def Morse_to_Audio(slowa, playsound=None):
     output=[]
     from playsound import playsound
     for element in slowa:
-        print(element)
+        # print(element)
         for i in range(0, len(element)):
-            print(element[i])
+            # print(element[i])
             if element[i] == '1':
                 playsound("kropka.wav")
                 output.extend(data_kropka)
@@ -195,11 +196,13 @@ def Morse_to_Audio(slowa, playsound=None):
     import scipy.io.wavfile
     wynik=np.asarray(output)
     maksymum=max(abs(wynik))
+    srednia=np.mean(wynik)
     for i in range(0,len(wynik)):
         wynik[i]=wynik[i]/maksymum
+
     scipy.io.wavfile.write("OutPutMORSEM.wav", rate_kreska, wynik)
     #plik sie nie odtwarza w windowsie ale w audacity jest już wyraźnym szumem XD
-    
+
     # stop stream
     # play_kropka.stop_stream()
     # play_kropka.close()
