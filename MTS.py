@@ -154,25 +154,32 @@ def Morse_to_Audio(slowa):
     print(dl_kreska)
     print(dl_kropka)
     import time
+   import playsound
+
+    from playsound import playsound
     for element in slowa:
         print(element)
-        for i in range(0,len(element)):
+        for i in range(0, len(element)):
             print(element[i])
-            if element[i]=='1':
-                while data_kropka:
-                    play_kropka.write(data_kropka)
-                    data_kropka = kropka.readframes(1024)
+            if element[i] == '1':
+                playsound("kropka.wav")
+                # data_kropka = kropka.readframes(1024)
+                # while data_kropka:
+                #     play_kropka.write(data_kropka)
+                #     data_kropka = kropka.readframes(1024)
 
-            if element[i]=='0':
-                while data_kreska:
-                    play_kreska.write(data_kreska)
-                    data_kreska = kreska.readframes(1024)
+            if element[i] == '0':
+                playsound("kreska.wav")
+                # data_kreska = kreska.readframes(1024)
+                # while data_kreska:
+                #     play_kreska.write(data_kreska)
+                #     data_kreska = kreska.readframes(1024)
 
-            if i!=len(element)-1:
+            if i != len(element) - 1:
                 time.sleep(dl_kropka)
         time.sleep(dl_kreska)
 
-    #stop stream
+    # stop stream
     play_kropka.stop_stream()
     play_kropka.close()
     play_kreska.stop_stream()
