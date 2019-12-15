@@ -4,32 +4,38 @@ import wave
 import numpy as np
 import matplotlib.pyplot as plt
 from Mors import alfabetmorsa
+import pyaudio
 
 SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
-filename="MorseCode_mid.wav"
+filename="val2.wav"
+
 #wave z alfabetem
 for i in alfabetmorsa.keys():
     print("[",i,"] = ",alfabetmorsa[i],"   ")
-audio=wave.open(filename, 'rb')
-s = audio.readframes(-1)
-s = np.fromstring(s, 'Int16')
-rate=audio.getframerate()
-_20ms=int(0.02*rate)
 
-plt.plot(s)
-plt.show()
-def sprawdzamcos(audio):
+def load_dane(file_name):
+    audio = wave.open(file_name, 'rb')
+    s = audio.readframes(-1)
+    s = np.fromstring(s, 'Int16')
+    rate = audio.getframerate()
+    return s,rate
+
+s,rate=load_dane(filename)
+
+# plt.plot(s)
+# plt.show()
+def Audio_to_text(audio,prob=200):
     audio=abs(audio)
     detektor=[]
     avg_audio=[]
-    plt.plot(audio)
-    plt.show()
-    for i in range(0, len(audio),200):
-        avg_audio.append(np.mean(abs(audio[i:i+1000])))
+    # plt.plot(audio)
+    # plt.show()
+    for i in range(0, len(audio),prob):
+        avg_audio.append(np.mean(abs(audio[i:i+prob*5])))
         # avg_audio.append(audio[i])
-    print("1")
-    plt.plot(avg_audio)
-    plt.show()
+    # print("1")
+    # plt.plot(avg_audio)
+    # plt.show()
     for i in range(0, len(avg_audio)):
         # print(avg_audio[i])
         # print(max(avg_audio)/3)
@@ -40,7 +46,7 @@ def sprawdzamcos(audio):
     detektor.append(0)
     impulsy=[]
     impulsy.append(0)
-    print("2")
+    # print("2")
     el=0
     for i in range(1,len(detektor)):
         if detektor[i]==detektor[i-1]:
@@ -50,28 +56,127 @@ def sprawdzamcos(audio):
             el=el+1
     # print(detektor)
     # print(impulsy)
-    print("3")
+    # print("3")
     slowa=[]
     wyraz = ""
+    bezwgl = []
+    for ele in impulsy:
+        if ele != 0: bezwgl.append(abs(ele))
+    print(bezwgl)
+
+    maximal = max(impulsy)
+    minimal = min(bezwgl)
+    print(minimal)
     for i in range(0,len(impulsy)):
-        if impulsy[i]<min(impulsy)/3 or impulsy[i]==0:
-            slowa.append(wyraz)
-            wyraz=""
-            slowa.append(" ")
-        if impulsy[i]>min(impulsy)/2:
-            if impulsy[i]>0 and impulsy[i]<=max(impulsy)/3:
-                wyraz=wyraz+("1")
-            if impulsy[i]>=max(impulsy)/3:
-                wyraz = wyraz +("0")
+        if impulsy[i]<=0:
+            if impulsy[i]<=-0.5*minimal and impulsy[i]>-2*minimal:
+                wyraz = wyraz + ""
+            if impulsy[i]<=-2*minimal and impulsy[i]>=-3*minimal:
+                if i!=0 and i!=len(impulsy)-1: wyraz = wyraz + " "
+            if impulsy[i]<-3*minimal:
+                slowa.append(wyraz)
+                wyraz=""
+
+        else:
+            if impulsy[i]<=2*minimal:
+                wyraz = wyraz + "1"
+            if impulsy[i]>2*minimal:
+                wyraz = wyraz + "0"
+
+
+        #
+        #
+        # if impulsy[i]<minimal or impulsy[i]==0:
+        #     slowa.append(wyraz)
+        #     wyraz=""
+        #     slowa.append(" ")
+        # if impulsy[i]>maximal/10:
+        #     if impulsy[i]>0 and impulsy[i]<=maximal/3:
+        #         wyraz=wyraz+("1")
+        #     if impulsy[i]>=maximal/3:
+        #         wyraz = wyraz +("0")
+        # if impulsy[i]<0 and impulsy[i]>minIMP/3:
+        #     wyraz = wyraz + (" ")
     return slowa
 
-slowa=sprawdzamcos(s)
-print(slowa)
-slowo=""
-for dl in range(0, len(slowa)):
-    # print(tekst[dl])
-    for key in alfabetmorsa.keys():
-        if alfabetmorsa[key] == slowa[dl]:
-            slowo = slowo + str(key)
+# slowa=Audio_to_text(s,200)
+# slowa=Audio_to_text(s,20)
+# print(slowa)
 
-print(slowo)
+def MTT(slowa,alfabet):
+    slowo = ""
+    for dl in range(0, len(slowa)):
+        # print(tekst[dl])
+        for key in alfabetmorsa.keys():
+            if alfabetmorsa[key] == slowa[dl]:
+                slowo = slowo + str(key)
+    return slowo
+# slowo=MTT(slowa,alfabetmorsa)
+
+# print(slowo)
+slowa=['1','0','00']
+def Morse_to_Audio(slowa):
+    kropka = wave.open("kropka.wav", 'rb')
+    kreska = wave.open("kreska.wav", 'rb')
+    p_kropka = kropka.getparams()
+    p_kreska = kreska.getparams()
+
+    nch_kropka = kropka.getnchannels()
+    sampwidth_kropka = kropka.getsampwidth()
+    rate_kropka = kropka.getframerate()
+    nframe_kropka = kropka.getnframes()
+
+    nch_kreska = kreska.getnchannels()
+    sampwidth_kreska = kreska.getsampwidth()
+    rate_kreska = kreska.getframerate()
+    nframe_kreska = kreska.getnframes()
+
+    p = pyaudio.PyAudio()
+    play_kropka = p.open(format=p.get_format_from_width(sampwidth_kropka),
+                  channels=nch_kropka,
+                  rate=rate_kropka,
+                  output=True)
+
+    p = pyaudio.PyAudio()
+    play_kreska = p.open(format=p.get_format_from_width(sampwidth_kreska),
+                         channels=nch_kreska,
+                         rate=rate_kreska,
+                         output=True)
+    chunk = 1024
+    data_kropka = kropka.readframes(-1)
+    data_kreska = kreska.readframes(-1)
+
+    # play.write(data)
+    # play.stop_stream()
+    #play stream
+    dl_kropka=len(data_kropka)/rate_kropka
+    dl_kreska =len(data_kreska)/rate_kreska
+    print(dl_kreska)
+    print(dl_kropka)
+    import time
+    for element in slowa:
+        print(element)
+        for i in range(0,len(element)):
+            print(element[i])
+            if element[i]=='1':
+                while data_kropka:
+                    play_kropka.write(data_kropka)
+                    data_kropka = kropka.readframes(1024)
+
+            if element[i]=='0':
+                while data_kreska:
+                    play_kreska.write(data_kreska)
+                    data_kreska = kreska.readframes(1024)
+
+            if i!=len(element)-1:
+                time.sleep(dl_kropka)
+        time.sleep(dl_kreska)
+
+    #stop stream
+    play_kropka.stop_stream()
+    play_kropka.close()
+    play_kreska.stop_stream()
+    play_kreska.close()
+    p.terminate()
+
+Morse_to_Audio(slowa)
