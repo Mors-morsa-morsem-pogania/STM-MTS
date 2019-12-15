@@ -116,35 +116,35 @@ def MTT(slowa,alfabet):
 # print(slowo)
 slowa=['1','0','00']
 def Morse_to_Audio(slowa):
-    kropka = wave.open("kropka.wav", 'rb')
-    kreska = wave.open("kreska.wav", 'rb')
-    p_kropka = kropka.getparams()
-    p_kreska = kreska.getparams()
+#     kropka = wave.open("kropka.wav", 'rb')
+#     kreska = wave.open("kreska.wav", 'rb')
+#     p_kropka = kropka.getparams()
+#     p_kreska = kreska.getparams()
 
-    nch_kropka = kropka.getnchannels()
-    sampwidth_kropka = kropka.getsampwidth()
-    rate_kropka = kropka.getframerate()
-    nframe_kropka = kropka.getnframes()
+#     nch_kropka = kropka.getnchannels()
+#     sampwidth_kropka = kropka.getsampwidth()
+#     rate_kropka = kropka.getframerate()
+#     nframe_kropka = kropka.getnframes()
 
-    nch_kreska = kreska.getnchannels()
-    sampwidth_kreska = kreska.getsampwidth()
-    rate_kreska = kreska.getframerate()
-    nframe_kreska = kreska.getnframes()
+#     nch_kreska = kreska.getnchannels()
+#     sampwidth_kreska = kreska.getsampwidth()
+#     rate_kreska = kreska.getframerate()
+#     nframe_kreska = kreska.getnframes()
 
-    p = pyaudio.PyAudio()
-    play_kropka = p.open(format=p.get_format_from_width(sampwidth_kropka),
-                  channels=nch_kropka,
-                  rate=rate_kropka,
-                  output=True)
+#     p = pyaudio.PyAudio()
+#     play_kropka = p.open(format=p.get_format_from_width(sampwidth_kropka),
+#                   channels=nch_kropka,
+#                   rate=rate_kropka,
+#                   output=True)
 
-    p = pyaudio.PyAudio()
-    play_kreska = p.open(format=p.get_format_from_width(sampwidth_kreska),
-                         channels=nch_kreska,
-                         rate=rate_kreska,
-                         output=True)
-    chunk = 1024
-    data_kropka = kropka.readframes(-1)
-    data_kreska = kreska.readframes(-1)
+#     p = pyaudio.PyAudio()
+#     play_kreska = p.open(format=p.get_format_from_width(sampwidth_kreska),
+#                          channels=nch_kreska,
+#                          rate=rate_kreska,
+#                          output=True)
+#     chunk = 1024
+#     data_kropka = kropka.readframes(-1)
+#     data_kreska = kreska.readframes(-1)
 
     # play.write(data)
     # play.stop_stream()
@@ -180,10 +180,10 @@ def Morse_to_Audio(slowa):
         time.sleep(dl_kreska)
 
     # stop stream
-    play_kropka.stop_stream()
-    play_kropka.close()
-    play_kreska.stop_stream()
-    play_kreska.close()
-    p.terminate()
+#     play_kropka.stop_stream()
+#     play_kropka.close()
+#     play_kreska.stop_stream()
+#     play_kreska.close()
+#     p.terminate()
 
 Morse_to_Audio(slowa)
