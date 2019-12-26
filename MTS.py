@@ -7,11 +7,11 @@ from Mors import alfabetmorsa
 import pyaudio
 
 SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
-filename = "mowca4.wav"
+filename = "Maksym.wav"
 
 # wave z alfabetem
-for i in alfabetmorsa.keys():
-    print("[", i, "] = ", alfabetmorsa[i], "   ")
+# for i in alfabetmorsa.keys():
+#     print("[", i, "] = ", alfabetmorsa[i], "   ")
 
 
 def load_dane(file_name):
@@ -72,16 +72,19 @@ def Audio_to_text(audio, prob=20):
             if impulsy[i] <= -2 * minimal and impulsy[i] >= -3 * minimal:
                 if i != 0 and i != len(impulsy) - 1: wyraz = wyraz + " "
             if impulsy[i] < -3 * minimal:
+                wyraz=wyraz.replace(" ", "")
                 slowa.append(wyraz)
                 wyraz = ""
-
+            if impulsy[i] < -9 * minimal:
+                slowa.append(" ")
         else:
             if impulsy[i] <= 2 * minimal:
                 wyraz = wyraz + "1"
             if impulsy[i] > 2 * minimal:
                 wyraz = wyraz + "0"
-
+    wyraz=wyraz.replace(" ", "")
     slowa.append(wyraz)
+
     return slowa
 
 def Speech_to_text(audio, prob=100):
@@ -167,7 +170,7 @@ slowaaaa=MTT(slowa,alfabetmorsa)
 print(slowaaaa)
 
 output=[]
-def Morse_to_Audio(slowa, playsound=None):
+def Morse_to_Audio(slowa, playsound=None,filename="output.wav"):
     kropka = wave.open("kropka.wav", 'rb')
     kreska = wave.open("kreska.wav", 'rb')
 
@@ -198,7 +201,8 @@ def Morse_to_Audio(slowa, playsound=None):
             if element[i] == '0':
                 # playsound("kreska.wav")
                 output.extend(data_kreska)
-
+            if element[i] == ' ':
+                output.extend(np.zeros(int(len(data_kreska)))*3)
             if i != len(element) - 1:
                 # time.sleep(dl_kropka)
                 output.extend(np.zeros(int(len(data_kropka))))
@@ -213,11 +217,11 @@ def Morse_to_Audio(slowa, playsound=None):
 
     wynik=np.array(wynik).astype('int16')
 
-    scipy.io.wavfile.write("OutPutMORSEM_mowca4.wav", rate_kreska, wynik)
+    scipy.io.wavfile.write(filename, rate_kreska, wynik)
 
     #plik sie nie odtwarza w windowsie ale w audacity jest już wyraźnym szumem XD
 
     kropka.close()
     kreska.close()
 
-Morse_to_Audio(slowa)
+Morse_to_Audio(slowa,alfabetmorsa,filename="out_Maksym.wav")
