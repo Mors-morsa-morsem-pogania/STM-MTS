@@ -196,11 +196,11 @@ def Morse_to_Audio(slowa, playsound=None,filename="output.wav"):
             # print(element[i])
             if element[i] == '1':
                 # playsound("kropka.wav")
-                output.extend(data_kropka)
+                output.extend(np.ones(int(data_kropka)))
 
             if element[i] == '0':
                 # playsound("kreska.wav")
-                output.extend(data_kreska)
+                output.extend(np.ones(int(data_kreska)))
             if element[i] == ' ':
                 output.extend(np.zeros(int(len(data_kreska)))*3)
             if i != len(element) - 1:
