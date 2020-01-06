@@ -3,12 +3,13 @@ import wave
 from pynput import keyboard
 import threading
 
+# UPORZĄDKOWANE
 
 CHUNK = 8192
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
-WAVE_OUTPUT_FILENAME = "waves/output.wav"
+WAVE_OUTPUT_FILENAME = "output\\output.wav"
 
 def record_sound_on_key():
 

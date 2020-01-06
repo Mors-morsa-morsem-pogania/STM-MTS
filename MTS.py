@@ -3,18 +3,15 @@ import signal
 import wave
 import numpy as np
 import matplotlib.pyplot as plt
-from Mors import alfabetmorsa
-import pyaudio
-
-SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
-filename = "Maksym.wav"
-
-# wave z alfabetem
-# for i in alfabetmorsa.keys():
-#     print("[", i, "] = ", alfabetmorsa[i], "   ")
+from morse_coding import AlfabetMorsa
+import scipy.io.wavfile as wav
 
 
-def load_dane(file_name):
+#SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
+SOUND_PATH = "D:\\Python\\PROJEKT-MORS\\Morseshort.wav"
+filename = "output\\output.wav"
+
+def load_dane(file_name=filename):
     audio = wave.open(file_name, 'rb')
     s = audio.readframes(-1)
     s = np.fromstring(s, 'Int16')
@@ -22,16 +19,16 @@ def load_dane(file_name):
     return s, rate
 
 
-s, rate = load_dane(filename)
-
-# plt.plot(s)
-# plt.show()
-def Audio_to_text(audio, prob=20):
+def audio_to_text(audio, prob=20):
+    """
+    Transforms knocking Morse to binary
+    :param audio: Audio data to transform
+    :param prob:
+    :return: text
+    """
     audio = abs(audio)
     detektor = []
     avg_audio = []
-    # plt.plot(audio)
-    # plt.show()
     for i in range(0, len(audio), prob):
         avg_audio.append(np.mean(abs(audio[i:i + prob * 5])))
 
@@ -87,7 +84,14 @@ def Audio_to_text(audio, prob=20):
 
     return slowa
 
-def Speech_to_text(audio, prob=100):
+
+def speech_to_text(audio, prob=100):
+    """
+    Transforms spoken Morse (on vowels) to binary
+    :param audio: Audio data to transform
+    :param prob:
+    :return:
+    """
     audio = abs(audio)
     detektor = []
     avg_audio = []
@@ -149,79 +153,79 @@ def Speech_to_text(audio, prob=100):
     return slowa
 
 
-# slowa=Audio_to_text(s)
-# print(slowa)
-
-slowa=Speech_to_text(s)
-print(slowa)
-
-def MTT(slowa, alfabet):
+def binary_Morse_to_text(slowa):
+    """
+    Transforms given list of Morse binary signs into words using given dictionary
+    :param slowa: list of Morse binary signs
+    :param alfabet: dictionary with Morse binary coding
+    :return: string -> translated word
+    """
     slowo = ""
     for dl in range(0, len(slowa)):
         # print(tekst[dl])
-        for key in alfabetmorsa.keys():
-            if alfabetmorsa[key] == slowa[dl]:
+        for key in AlfabetMorsa.keys():
+            if AlfabetMorsa[key] == slowa[dl]:
                 slowo = slowo + str(key)
     return slowo
 
 
-slowaaaa=MTT(slowa,alfabetmorsa)
+def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_output.wav"):
+    """
+    Transforms binary Morse code to beeping audio
+    :param words: string to transform
+    :param playsound: -
+    :param name_file: name of wave file with the output
+    :return:
+    """
+    dot = wave.open("kropka.wav", 'rb')
+    dash = wave.open("kreska.wav", 'rb')
 
-print(slowaaaa)
+    rate_dot = dot.getframerate()
 
-output=[]
-def Morse_to_Audio(slowa, playsound=None,filename="output.wav"):
-    kropka = wave.open("kropka.wav", 'rb')
-    kreska = wave.open("kreska.wav", 'rb')
+    rate_dash = dash.getframerate()
 
-    rate_kropka = kropka.getframerate()
+    data_dot = dot.readframes(-1)
+    data_dash = dash.readframes(-1)
+    data_dot = np.fromstring(data_dot, 'Int16')
+    data_dash = np.fromstring(data_dash, 'Int16')
 
-    rate_kreska = kreska.getframerate()
+    dl_kropka = len(data_dot) / rate_dot
+    dl_kreska = len(data_dash) / rate_dash
 
-    data_kropka = kropka.readframes(-1)
-    data_kreska = kreska.readframes(-1)
-    data_kropka = np.fromstring(data_kropka, 'Int16')
-    data_kreska = np.fromstring(data_kreska, 'Int16')
 
-    dl_kropka = len(data_kropka) / rate_kropka
-    dl_kreska = len(data_kreska) / rate_kreska
 
-    import time
-    import playsound
     output=[]
-    from playsound import playsound
-    for element in slowa:
+
+    for element in words:
         # print(element)
         for i in range(0, len(element)):
             # print(element[i])
             if element[i] == '1':
                 # playsound("kropka.wav")
-                output.extend(np.ones(int(data_kropka)))
+                output.extend(np.ones(int(data_dot)))
 
             if element[i] == '0':
                 # playsound("kreska.wav")
-                output.extend(np.ones(int(data_kreska)))
+                output.extend(np.ones(int(data_dash)))
             if element[i] == ' ':
-                output.extend(np.zeros(int(len(data_kreska)))*3)
+                output.extend(np.zeros(int(len(data_dash)))*3)
             if i != len(element) - 1:
                 # time.sleep(dl_kropka)
-                output.extend(np.zeros(int(len(data_kropka))))
+                output.extend(np.zeros(int(len(data_dot))))
             else:
                 continue
         # time.sleep(dl_kreska)
-        output.extend(np.zeros(int(len(data_kreska))))
+        output.extend(np.zeros(int(len(data_dash))))
 
     # print(output)
-    import scipy.io.wavfile
+
     wynik=np.asarray(output)
 
     wynik=np.array(wynik).astype('int16')
 
-    scipy.io.wavfile.write(filename, rate_kreska, wynik)
+    wav.write(name_file, rate_dash, wynik)
 
     #plik sie nie odtwarza w windowsie ale w audacity jest już wyraźnym szumem XD
 
-    kropka.close()
-    kreska.close()
-
-Morse_to_Audio(slowa,alfabetmorsa,filename="out_Maksym.wav")
+    dot.close()
+    dash.close()
