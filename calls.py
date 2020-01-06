@@ -41,7 +41,8 @@ def call_MTS():
         choice = int(input("Wybierz sposób wprowadzenia sygnału: \n[1] Mowa (jednotonowa samogłoska) \n[2] Inne (maszynowe)\n\n[0] Cofnij do menu\n"))
         if choice == 1:
             print("Naciśnij i przytrzymaj LCtrl aby nagrywać. Puść LCtrl, aby zakończyć nagrywanie.\n")
-            audio = record_sound_on_key()
+            record_sound_on_key()
+            audio,rate = load_dane(file_name="output\\output.wav")
             word = speech_to_text(audio=audio)
             translated = binary_Morse_to_text(word)
 
@@ -66,8 +67,9 @@ def call_MTS():
 
         elif choice == 2:
             print("Naciśnij i przytrzymaj LCtrl aby nagrywać. Puść LCtrl, aby zakończyć nagrywanie.\n")
-            audio = record_sound_on_key()
-            word = audio_to_text(audio=audio)
+            record_sound_on_key()
+            audio, rate = load_dane(file_name="output\\output.wav")
+            word = speech_to_text(audio=audio)
             translated = binary_Morse_to_text(word)
 
             choice1 = 6

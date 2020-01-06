@@ -85,3 +85,4 @@ def record_sound_on_key():
     wf.setframerate(RATE)
     wf.writeframes(b''.join(frames))
     wf.close()
+    return stream

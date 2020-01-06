@@ -12,6 +12,22 @@ def load_csv(filename):
         reader = csv.reader(f, delimiter=',')
         for row in reader:
             results_dict[str(row[0])] = str(row[1])
+    results_dict[" "]=" "
+    results_dict["."] = "101010"
+    results_dict[","] = "1100"
+    results_dict[""] = "100001"
+    results_dict["_"]="110010"
+    results_dict[":"]="111"
+    results_dict[";"]="10101"
+    results_dict["?"]="110011"
+    results_dict["!"]="10100"
+    results_dict["-"]="11110"
+    results_dict["+"]="10101"
+    results_dict["/"]="1101"
+    results_dict["("]="1001"
+    results_dict[")"]="10010"
+    results_dict["="]="1110"
+    results_dict["@"]="100101"
     return results_dict
 
 
@@ -27,19 +43,19 @@ def TTM(textfile, morse_dictionary=AlfabetMorsa):
     """
     # plik = open(plikztekstem, 'r+')
     # mors = plik.readline()
-    mors = textfile
+    mors = textfile.lower()
     word = ""
-    if str(mors).isalnum() == True:
-        print(mors)
-        for i in range(0, len(mors)):
-            word = word + str(morse_dictionary[mors[i]]) + str("|")
-        print(word)
-        word = word.replace("1", '.')
-        word = word.replace("0", '_ ')
-        print(word)
-    else:
-        word = "ERROR"
-        print(word)
+    # if str(mors).isalnum() == True:
+    print(mors)
+    for i in range(0, len(mors)):
+        word = word + str(morse_dictionary[mors[i]]) + str("|")
+    print(word)
+    word = word.replace("1", '.')
+    word = word.replace("0", '_ ')
+    print(word)
+    # else:
+    # word = "ERROR"
+    # print(word)
     #plik.close()
 
 
@@ -74,4 +90,4 @@ def morse_to_text(textfile_name="output_from_MTT.txt", morse_dict=AlfabetMorsa):
     file.close()
 
 
-# MTT("MTT.txt", alfabetmorsa)
+TTM("Siema, co tam u ciebie?", AlfabetMorsa)

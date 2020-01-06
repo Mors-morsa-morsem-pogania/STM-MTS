@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from morse_coding import AlfabetMorsa
 import scipy.io.wavfile as wav
-
+from numpy import ones
 
 #SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
 SOUND_PATH = "D:\\Python\\PROJEKT-MORS\\Morseshort.wav"
@@ -61,7 +61,8 @@ def audio_to_text(audio, prob=20):
         if ele != 0: bezwgl.append(abs(ele))
 
     minimal = min(bezwgl)
-
+    if impulsy[0]<0: del impulsy[0]
+    if impulsy[len(impulsy)-1]<0: del impulsy[len(impulsy)-1]
     for i in range(0, len(impulsy)):
         if impulsy[i] <= 0:
             if impulsy[i] <= -0.5 * minimal and impulsy[i] > -2 * minimal:
@@ -92,6 +93,7 @@ def speech_to_text(audio, prob=100):
     :param prob:
     :return:
     """
+
     audio = abs(audio)
     detektor = []
     avg_audio = []
@@ -128,7 +130,8 @@ def speech_to_text(audio, prob=100):
     bezwgl = []
     for ele in impulsy:
         if ele != 0: bezwgl.append(abs(ele))
-
+    if impulsy[0]<0: del impulsy[0]
+    if impulsy[len(impulsy)-1]<0: del impulsy[len(impulsy)-1]
     minimal = min(bezwgl)
     maximal=max(impulsy)
     minimalne_minimum=min(impulsy)
@@ -189,10 +192,8 @@ def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_outpu
     data_dot = np.fromstring(data_dot, 'Int16')
     data_dash = np.fromstring(data_dash, 'Int16')
 
-    dl_kropka = len(data_dot) / rate_dot
-    dl_kreska = len(data_dash) / rate_dash
-
-
+    l2=len(data_dot)
+    l1=len(data_dash)
 
     output=[]
 
@@ -202,11 +203,11 @@ def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_outpu
             # print(element[i])
             if element[i] == '1':
                 # playsound("kropka.wav")
-                output.extend(np.ones(int(data_dot)))
+                output.extend(data_dot)
 
             if element[i] == '0':
                 # playsound("kreska.wav")
-                output.extend(np.ones(int(data_dash)))
+                output.extend(data_dash)
             if element[i] == ' ':
                 output.extend(np.zeros(int(len(data_dash)))*3)
             if i != len(element) - 1:

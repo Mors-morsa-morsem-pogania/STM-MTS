@@ -44,15 +44,15 @@ def text_to_binary_morse(speech):
     :param speech: word to translate (string)
     :return: word_list -> list of signs, word_tmp -> string of signs with "|" as delimeter
     """
-    morse = speech
+    morse = speech.lower()
     word_tmp = ""
     word_list = []
-    if str(morse.replace(" ","")).isalnum() == True:
-        for i in range(0, len(morse)):
-            word_tmp = word_tmp + str(AlfabetMorsa[morse[i]]) + str("|")
-        word_list = word_tmp.split("|")
-    else:
-        word_tmp = "ERROR"
+    # if str(morse.replace(" ","")).isalnum() == True:
+    for i in range(0, len(morse)):
+        word_tmp = word_tmp + str(AlfabetMorsa[morse[i]]) + str("|")
+    word_list = word_tmp.split("|")
+    # else:
+    #     word_tmp = "ERROR"
 
     return word_list, word_tmp
 
