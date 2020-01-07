@@ -163,9 +163,6 @@ def binary_Morse_to_text(text,morse_dict=AlfabetMorsa):
     :param alfabet: dictionary with Morse binary coding
     :return: string -> translated word
     """
-    text = text.replace(".", '1')
-    text = text.replace("_ ", '0')
-    text = text.split("|")
     word = ""
     for dl in range(0, len(text)):
         # print(tekst[dl])
