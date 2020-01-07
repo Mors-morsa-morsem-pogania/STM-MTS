@@ -156,7 +156,7 @@ def speech_to_text(audio, prob=100):
     return slowa
 
 
-def binary_Morse_to_text(text):
+def binary_Morse_to_text(text,morse_dict=AlfabetMorsa):
     """
     Transforms given list of Morse binary signs into words using given dictionary
     :param slowa: list of Morse binary signs
