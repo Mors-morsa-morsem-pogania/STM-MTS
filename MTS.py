@@ -2,7 +2,6 @@
 import signal
 import wave
 import numpy as np
-import matplotlib.pyplot as plt
 from morse_coding import AlfabetMorsa
 import scipy.io.wavfile as wav
 from numpy import ones
@@ -33,8 +32,7 @@ def audio_to_text(audio, prob=20):
         avg_audio.append(np.mean(abs(audio[i:i + prob * 5])))
 
     # print("Punkt kontrolny 1")
-    plt.plot(avg_audio)
-    plt.show()
+
     for i in range(0, len(avg_audio)):
         if avg_audio[i] > max(avg_audio) / 3:
             detektor.append(1)
@@ -97,14 +95,11 @@ def speech_to_text(audio, prob=100):
     audio = abs(audio)
     detektor = []
     avg_audio = []
-    # plt.plot(audio)
-    # plt.show()
+
     for i in range(0, len(audio), prob):
         avg_audio.append(np.mean(abs(audio[i:i + prob * 5])))
 
     # print("Punkt kontrolny 1")
-    plt.plot(avg_audio)
-    plt.show()
 
     for i in range(0, len(avg_audio)):
         if avg_audio[i] > max(avg_audio) / 4:
@@ -163,6 +158,7 @@ def binary_Morse_to_text(text,morse_dict=AlfabetMorsa):
     :param alfabet: dictionary with Morse binary coding
     :return: string -> translated word
     """
+
     word = ""
     for dl in range(0, len(text)):
         # print(tekst[dl])
@@ -231,3 +227,22 @@ def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_outpu
 
     dot.close()
     dash.close()
+
+def morse_to_text(text, morse_dict=AlfabetMorsa):
+    """
+    Morse to Text
+    :param textfile_name: Name of txt file in which the output will appear
+    :param morse_dict: Dictionary variable containing Morse's signs written in binary system
+    :return:
+    """
+    text = text.replace(".", '1')
+    text = text.replace("_ ", '0')
+    text = text.split("|")
+    word = ""
+    for dl in range(0, len(text)):
+        # print(tekst[dl])
+        for key in morse_dict.keys():
+            if morse_dict[key] == text[dl]:
+                word = word + str(key)
+                break
+    return word
