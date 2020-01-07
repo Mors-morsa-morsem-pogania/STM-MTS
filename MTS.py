@@ -156,20 +156,24 @@ def speech_to_text(audio, prob=100):
     return slowa
 
 
-def binary_Morse_to_text(slowa):
+def binary_Morse_to_text(text):
     """
     Transforms given list of Morse binary signs into words using given dictionary
     :param slowa: list of Morse binary signs
     :param alfabet: dictionary with Morse binary coding
     :return: string -> translated word
     """
-    slowo = ""
-    for dl in range(0, len(slowa)):
+    text = text.replace(".", '1')
+    text = text.replace("_ ", '0')
+    text = text.split("|")
+    word = ""
+    for dl in range(0, len(text)):
         # print(tekst[dl])
-        for key in AlfabetMorsa.keys():
-            if AlfabetMorsa[key] == slowa[dl]:
-                slowo = slowo + str(key)
-    return slowo
+        for key in morse_dict.keys():
+            if morse_dict[key] == text[dl]:
+                word = word + str(key)
+                break
+    return word
 
 
 def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_output.wav"):
