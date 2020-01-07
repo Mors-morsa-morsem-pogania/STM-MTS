@@ -230,22 +230,3 @@ def morse_to_audio(words, playsound=None, name_file="output\\code_to_audio_outpu
 
     dot.close()
     dash.close()
-
-def morse_to_text(text, morse_dict=AlfabetMorsa):
-    """
-    Morse to Text
-    :param textfile_name: Name of txt file in which the output will appear
-    :param morse_dict: Dictionary variable containing Morse's signs written in binary system
-    :return:
-    """
-    text = text.replace(".", '1')
-    text = text.replace("_ ", '0')
-    text = text.split("|")
-    word = ""
-    for dl in range(0, len(text)):
-        # print(tekst[dl])
-        for key in morse_dict.keys():
-            if morse_dict[key] == text[dl]:
-                word = word + str(key)
-                break
-    return word
