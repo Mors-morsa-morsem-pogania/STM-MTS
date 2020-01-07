@@ -36,6 +36,21 @@ def get_word():
 
     return results[0]['transcript']
 
+def use_dictation(file_path):
+
+    args = DictationArgs(wav_filepath=file_path)
+    # args = DictationArgs()
+
+    if args.wave is not None or args.mic:
+        with create_audio_stream(args) as stream:
+            settings = DictationSettings(args)
+            recognizer = StreamingRecognizer(args.address, settings)
+
+            print('Recognizing...')
+            results = recognizer.recognize(stream)
+            print_results(results)
+
+    return results[0]['transcript']
 
 def text_to_binary_morse(speech):
     """
