@@ -89,5 +89,3 @@ def morse_to_text(textfile_name="output_from_MTT.txt", morse_dict=AlfabetMorsa):
     # print(slowo)
     file.close()
 
-
-TTM("Siema, co tam u ciebie?", AlfabetMorsa)

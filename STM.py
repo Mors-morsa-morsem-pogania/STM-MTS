@@ -1,4 +1,4 @@
-#tu będzie zbieranie mowy i wszystko co z tym związane 
+# tu będzie zbieranie mowy i wszystko co z tym związane
 
 # UPORZĄDKOWANE
 
@@ -7,7 +7,7 @@ from run_dictation import DictationArgs, DictationSettings, StreamingRecognizer,
 from morse_coding import AlfabetMorsa
 
 
-#path to recorded words
+# path to recorded words
 # SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Krokiet\WieczorowąPorą.wav"
 # SOUND_PATH="E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\tm-clients-master\waves\example.wav"
 # SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\annaiania.wav"
@@ -16,7 +16,7 @@ def get_word():
     """
     Records speech using micro_input.py (records on key),
     then creates transcript of spoken word or sentence by [dictation] system.
-    
+
     :return: recognized word or sentence (string)
     """
     record_sound_on_key()
@@ -36,8 +36,8 @@ def get_word():
 
     return results[0]['transcript']
 
-def use_dictation(file_path):
 
+def use_dictation(file_path):
     args = DictationArgs(wav_filepath=file_path)
     # args = DictationArgs()
 
@@ -52,10 +52,11 @@ def use_dictation(file_path):
 
     return results[0]['transcript']
 
+
 def text_to_binary_morse(speech):
     """
     Translates and returns given string as Morse code in binary.
-    
+
     :param speech: word to translate (string)
     :return: word_list -> list of signs, word_tmp -> string of signs with "|" as delimeter
     """

@@ -75,7 +75,7 @@ def call_MTS():
             print("Naciśnij i przytrzymaj LCtrl aby nagrywać. Puść LCtrl, aby zakończyć nagrywanie.\n")
             record_sound_on_key()
             audio, rate = load_dane(file_name="output\\output.wav")
-            word = speech_to_text(audio=audio)
+            word = audio_to_text(audio=audio)
             translated = binary_Morse_to_text(word)
 
             choice1 = 6
