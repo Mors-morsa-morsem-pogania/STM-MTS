@@ -85,7 +85,7 @@ def call_MTS():
                     print(translated)
                     break
                 elif choice1 == 2:
-                    output_wave_file = 'tts_output.wav'
+                    output_wave_file = 'output\\tts_output.wav'
                     ap = AddressProvider()
                     address = ap.get("tts")
                     sampling_rate = 44100
@@ -113,7 +113,7 @@ def call_MTS():
                     print(translated)
                     break
                 elif choice1 == 2:
-                    output_wave_file = 'tts_output.wav'
+                    output_wave_file = 'output\\tts_output.wav'
                     ap = AddressProvider()
                     address = ap.get("tts")
                     sampling_rate = 44100
