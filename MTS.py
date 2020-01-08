@@ -118,7 +118,7 @@ def speech_to_text(audio, prob=100):
             impulsy.append(0)
             el = el + 1
     # print(detektor)
-    print(impulsy)
+    # print(impulsy)
     # print("Punkt kontrolny 3")
     slowa = []
     wyraz = ""
