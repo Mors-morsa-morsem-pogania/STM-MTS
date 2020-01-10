@@ -99,12 +99,39 @@ def call_MTS():
             word = input("Wprowadź słowo do przetłumaczenia: ")
             word_Morse=morse_to_text(word)
             print("Tłumaczenie: ", word_Morse)
+
+            choice1 = 6
+            while choice1 != 0:
+                choice1 = int(input("Wybierz sposób wyprowadzenia sygnału: \n[1] Wyświetl \n[2] Odtwórz\n"))
+                if choice1 == 1:
+                    print(word_Morse)
+                    break
+                elif choice1 == 2:
+                    output_wave_file = 'output\\tts_output.wav'
+                    ap = AddressProvider()
+                    address = ap.get("tts")
+                    sampling_rate = 44100
+                    input_text = word_Morse
+                    time.sleep(1.5)
+                    call_synthesize(address, input_text, output_wave_file, sampling_rate)
+                    break
             break
         elif choice == 4:
+
+            choice_speech_gen = int(input("Wybierz sposób w jaki generowany był sygnał: \n[1] Mowa \n[2] Generator\n"))
             filename = input("Podaj ścieżkę do pliku wave z sygnałem: ")
             audio, rate = load_dane(file_name=filename)
-            word = speech_to_text(audio=audio)
-            translated = binary_Morse_to_text(word)
+            word=""
+            error=False
+            translated=""
+            if choice_speech_gen==1:
+                word = speech_to_text(audio=audio)
+            elif choice_speech_gen==2:
+                word = audio_to_text(audio=audio)
+            else:
+                print("Wybierz prawidłową opcję.\n")
+                error=True
+            if error==False: translated = binary_Morse_to_text(word)
 
             choice1 = 6
             while choice1 != 0:

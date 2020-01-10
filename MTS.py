@@ -8,8 +8,8 @@ from numpy import ones
 
 #SOUND_PATH = "E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\Morseshort.wav"
 SOUND_PATH = "D:\\Python\\PROJEKT-MORS\\Morseshort.wav"
-filename = "output\\output.wav"
-
+# filename = "output\\output.wav"
+filename="E:\Studia\Semestr V\Technologia Mowy\ProjektII\Wszystko\\nagrania\Mors\\test9.wav"
 def load_dane(file_name=filename):
     audio = wave.open(file_name, 'rb')
     s = audio.readframes(-1)
@@ -123,16 +123,22 @@ def speech_to_text(audio, prob=100):
     slowa = []
     wyraz = ""
     bezwgl = []
+    cisza = []
     for ele in impulsy:
         if ele != 0: bezwgl.append(abs(ele))
-    if impulsy[0]<0: del impulsy[0]
-    if impulsy[len(impulsy)-1]<0: del impulsy[len(impulsy)-1]
+        if ele < 0: cisza.append(abs(ele))
+    if impulsy[0]<=0: del impulsy[0]
+    if impulsy[len(impulsy)-1]<=0: del impulsy[len(impulsy)-1]
+    # print(cisza)
+
+
     minimal = min(bezwgl)
+    min_cisza=min(cisza)
     maximal=max(impulsy)
     minimalne_minimum=min(impulsy)
     for i in range(0, len(impulsy)):
         if impulsy[i] <= 0:
-            if impulsy[i] <= -0.5 * minimal and impulsy[i] > 0.6 * minimalne_minimum:
+            if impulsy[i] <= -0.5 * min_cisza and impulsy[i] > 0.6 * minimalne_minimum:
                 wyraz = wyraz + ""
             # if impulsy[i] <= 0.1 * minimalne_minimum and impulsy[i] >= 0.5 * minimalne_minimum:
             #     if i != 0 and i != len(impulsy) - 1: wyraz = wyraz + " "
